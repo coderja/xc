@@ -95,6 +95,9 @@ export default {
     }
   },
   methods: {
+    /**
+    展示密码
+     */
     showPwd() {
       if (this.passwordType === 'password') {
         this.passwordType = ''

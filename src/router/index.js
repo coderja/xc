@@ -54,6 +54,27 @@ export const constantRoutes = [
       meta: { title: 'Dashboard', icon: 'dashboard' }
     }]
   },
+  {
+    path: '/mydeclar',
+    component: Layout,
+    redirect: '/mydeclar/add',
+    name: 'mydeclar',
+    meta: { title: 'mydeclar', icon: 'el-icon-s-help' },
+    children: [
+      {
+        path: 'add',
+        name: 'add',
+        component: () => import('@/views/declar/index'),
+        meta: { title: 'add', icon: 'table' }
+      },
+      {
+        path: 'add',
+        name: 'add',
+        component: () => import('@/views/declar/index'),
+        meta: { title: 'add', icon: 'table' }
+      }
+    ]
+  },
 
   {
     path: '/example',

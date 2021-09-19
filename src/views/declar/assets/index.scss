@@ -1,0 +1,22 @@
+
+::v-deep .el-select, .el-date-editor {
+    width: 90%;
+}
+
+.col-text-tip {
+    color:#409EFF;
+    display: flex;
+    font-size: 12px;
+    height: 40px;
+    align-items: center ;
+    text-indent: 18px;
+}
+
+::v-deep .el-form-item__label, .text-suffix, .text-info {
+   color: #666;
+   font-size: 14px;
+   font-weight: normal;
+}
+.text-center {
+    text-align: center;
+}

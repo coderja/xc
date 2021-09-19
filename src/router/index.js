@@ -76,6 +76,24 @@ export const constantRoutes = [
       }
     ]
   },
+  {
+    path: '/',
+    component: Layout,
+    redirect: '/myself-implementation',
+    children: [
+      {
+        path: '/myself-implementation',
+        name: 'Myself-implementation',
+        component: () => import('@/views/implementation/myself-implementation'),
+        meta: { title: 'Myself-implementation' }
+      }, {
+        path: '/implementation-filing',
+        name: 'Implementation-filing',
+        component: () => import('@/views/implementation/Implementation-filing'),
+        meta: { title: 'Inplementation-filing' }
+      }
+    ]
+  },
 
   {
     path: '/form',
@@ -148,6 +166,11 @@ export const constantRoutes = [
       }
     ]
   },
+  {
+    path: '/myself-implementation',
+    component: () => import('@/views/implementation/myself-implementation'),
+    name: 'Myself-implementation'
+  },
 
   {
     path: 'external-link',
@@ -161,12 +184,7 @@ export const constantRoutes = [
   },
 
   // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true },
-  {
-    path: 'myself-implementation',
-    component: () => import('@/views/implementation/myself-implementation'),
-    name: 'Myself-implementation'
-  }
+  { path: '*', redirect: '/404', hidden: true }
 
 ]
 

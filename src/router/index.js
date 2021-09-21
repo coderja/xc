@@ -102,16 +102,46 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/myself-implementation',
     children: [
-      {
+      { // 我的实施
         path: '/myself-implementation',
         name: 'Myself-implementation',
         component: () => import('@/views/implementation/myself-implementation'),
         meta: { title: 'Myself-implementation' }
-      }, {
+      }, { // 实施备案
         path: '/implementation-filing',
         name: 'Implementation-filing',
         component: () => import('@/views/implementation/Implementation-filing'),
         meta: { title: 'Inplementation-filing' }
+      }, { // 招投标备案
+        path: '/bidding-filing',
+        name: 'Bidding-filing',
+        component: () => import('@/views/implementation/bidding-filing'),
+        meta: { title: 'Bidding-filing' }
+      }, { // 项目变更
+        path: '/project-change',
+        name: 'Project-change',
+        component: () => import('@/views/implementation/project-change'),
+        meta: { title: 'Project-change' }
+      }, { // 项目跟踪
+        path: '/project-tracking',
+        name: 'Project-tracking',
+        component: () => import('@/views/implementation/project-tracking'),
+        meta: { title: 'Project-tracking' }
+      }, { // 合同备案
+        path: '/contract-filing',
+        name: 'Contract-filing',
+        component: () => import('@/views/implementation/contract-filing'),
+        meta: { title: 'Contract-filing' }
+      }, { // 验收备案
+        path: '/acceptance-record',
+        name: 'Acceptance-record',
+        component: () => import('@/views/implementation/acceptance-record'),
+        meta: { title: '验收备案' }
+      }, { // 验收申请
+        path: '/acceptance-application',
+        name: 'Acceptance-application',
+        component: () => import('@/views/implementation/acceptance-application'),
+        meta: { title: '验收申请' }
       }
     ]
   },

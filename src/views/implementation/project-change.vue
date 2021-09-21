@@ -1,5 +1,5 @@
 <template>
-  <div class="implementation-filing">
+  <div class="project-change">
     <!-- 基本信息 -->
     <div class="implementation-info">
       <div class="implementation-info-item">
@@ -26,9 +26,6 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <el-form-item label="项目性质:">
-            <div class="value">基础支撑</div>
-          </el-form-item>
           <el-form-item label="计划启用年月:">
             <div class="value">2020-09-01</div>
           </el-form-item>
@@ -72,7 +69,7 @@
       <div class="implementation-info-item">
         <div class="info-item-title">实施信息</div>
         <el-form ref="from" label-width="90px">
-          <el-form-item label="项目编号:">
+          <el-form-item label="实施周期:">
             <div class="value">12个月</div>
           </el-form-item>
           <div class="info">
@@ -82,7 +79,10 @@
       </div>
     </div>
     <div class="implementation-table-details">
-      <div class="table-title">文件上传</div>
+      <div class="table-title">招投标备案</div>
+      <div class="bidding-announcement">
+        <p><i class="red">*</i>变更依据：</p><el-input :rows="3" type="textarea" v-model="changeBasis" placeholder="请输入招标公告链接" />
+      </div>
       <div class="table-details">
         <el-table
           :data="tableData"
@@ -96,13 +96,13 @@
           />
           <el-table-column
             prop="fileName"
-            label="文件名称"
+            label="材料名称"
             width="420"
             align="center"
           />
           <el-table-column
-            prop="uploadedFile"
-            label="已上传文件"
+            prop="changelistFile"
+            label="已上传材料"
             width="420"
             align="center"
           />
@@ -128,8 +128,8 @@
       </div>
     </div>
     <div class="submit-btn">
-      <el-button type="info"  round>返回</el-button>
-      <el-button type="primary" round>提交</el-button>
+      <el-button type="info">返回</el-button>
+      <el-button type="primary" @click="submit">提交</el-button>
     </div>
   </div>
 </template>
@@ -138,25 +138,41 @@ export default {
   data() {
     return {
       tableData: [{
-        fileName: '实施方案和进度计划',
-        uploadedFile: '实施方案和进度计划',
+        fileName: '项目变更清单',
+        changelistFile: '项目变更清单',
         updateTime: '2021-09-21',
-        fileUrl: '4444',
+        fileUrl: '',
       }, {
-        fileName: '实施方案和进度计划',
-        uploadedFile: '实施方案和进度计划',
+        fileName: '新的实施方案',
+        changelistFile: '新的实施方案',
         updateTime: '2021-09-21',
-        fileUrl: ''
-      }]
+        fileUrl: '4444'
+      }],
+      changeBasis: '', // 招标公告链接
+    }
+  },
+  methods: {
+    /**
+     * 点击提交的事件
+     */
+    submit() {
+      if (!this.changeBasis) {
+        this.$message.error('请填写变更依据！')
+        return
+      }
     }
   }
 }
 </script>
 <style scoped lang="scss">
-.implementation-filing {
+.project-change {
   width: 100%;
   height: 100%;
   padding: 15px 15px;
+  p {
+    margin: 0;
+    padding: 0;
+  }
   ::v-deep label {
     font-weight: 500;
     color: #666;
@@ -200,13 +216,31 @@ export default {
       padding: 15px 0;
       font-weight: bold;
     }
+    .bidding-announcement {
+      display: flex;
+      padding: 15px 0;
+      p {
+        font-size: 16px;
+        font-weight: bold;
+        color: #666;
+        display: flex;
+        .red {
+          color: red;
+          margin-right: 2px;
+          font-size: 16px;
+        }
+      }
+      ::v-deep .el-textarea {
+        width: 40%;
+      }
+    }
   }
   .submit-btn {
     width: 100%;
     display: flex;
     padding: 35px 0 20px 0;
     justify-content: center;
-    ::v-deep .el-button.is-round {
+    ::v-deep .el-button {
       padding: 12px 33px;
     }
   }

@@ -1,5 +1,5 @@
 <template>
-  <div class="implementation-filing">
+  <div class="bidding-filing">
     <!-- 基本信息 -->
     <div class="implementation-info">
       <div class="implementation-info-item">
@@ -26,9 +26,6 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <el-form-item label="项目性质:">
-            <div class="value">基础支撑</div>
-          </el-form-item>
           <el-form-item label="计划启用年月:">
             <div class="value">2020-09-01</div>
           </el-form-item>
@@ -82,7 +79,10 @@
       </div>
     </div>
     <div class="implementation-table-details">
-      <div class="table-title">文件上传</div>
+      <div class="table-title">招投标备案</div>
+      <div class="bidding-announcement">
+        <p>招标公告链接：</p><el-input v-model="biddingAnnouncement" placeholder="请输入招标公告链接" />
+      </div>
       <div class="table-details">
         <el-table
           :data="tableData"
@@ -128,8 +128,8 @@
       </div>
     </div>
     <div class="submit-btn">
-      <el-button type="info"  round>返回</el-button>
-      <el-button type="primary" round>提交</el-button>
+      <el-button type="info">返回</el-button>
+      <el-button type="primary" @click="submit">提交</el-button>
     </div>
   </div>
 </template>
@@ -138,25 +138,41 @@ export default {
   data() {
     return {
       tableData: [{
-        fileName: '实施方案和进度计划',
+        fileName: '招标文件',
         uploadedFile: '实施方案和进度计划',
         updateTime: '2021-09-21',
-        fileUrl: '4444',
+        fileUrl: '',
       }, {
-        fileName: '实施方案和进度计划',
+        fileName: '招标文件签章页',
         uploadedFile: '实施方案和进度计划',
         updateTime: '2021-09-21',
-        fileUrl: ''
-      }]
+        fileUrl: '4444'
+      }],
+      biddingAnnouncement: '', // 招标公告链接
+    }
+  },
+  methods: {
+    /**
+     * 点击提交的事件
+     */
+    submit() {
+      if (!this.biddingAnnouncement && !this.tableData[0].fileUrl) {
+        this.$message.error('请填写招标公告链接或者上传招标文件！')
+        return
+      }
     }
   }
 }
 </script>
 <style scoped lang="scss">
-.implementation-filing {
+.bidding-filing {
   width: 100%;
   height: 100%;
   padding: 15px 15px;
+  p {
+    margin: 0;
+    padding: 0;
+  }
   ::v-deep label {
     font-weight: 500;
     color: #666;
@@ -200,13 +216,26 @@ export default {
       padding: 15px 0;
       font-weight: bold;
     }
+    .bidding-announcement {
+      display: flex;
+      padding: 15px 0;
+      align-items: center;
+      p {
+        font-size: 16px;
+        font-weight: bold;
+        color: #666;
+      }
+      ::v-deep .el-input {
+        width: 30%;
+      }
+    }
   }
   .submit-btn {
     width: 100%;
     display: flex;
     padding: 35px 0 20px 0;
     justify-content: center;
-    ::v-deep .el-button.is-round {
+    ::v-deep .el-button {
       padding: 12px 33px;
     }
   }

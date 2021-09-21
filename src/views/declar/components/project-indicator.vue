@@ -1,6 +1,11 @@
 <template>
   <div class="app-container">
-    <el-form ref="form" :model="form" label-width="140px">
+    <el-form
+      ref="projectIndicForm"
+      :disabled="true"
+      :model="form"
+      label-width="120px"
+    >
       <form-label-title>
         <span slot="title">
           项目绩效指标
@@ -26,15 +31,17 @@
           </el-form-item>
         </el-col>
 
-        <el-col :span="3" class="text-center">
+        <el-col :span="3" class="text-center mt-5">
           <el-button
             v-if="i == 0"
             type="primary"
+            size="small"
             @click="addItem"
           >新增</el-button>
           <el-button
             v-else
             type="danger"
+            size="small"
             @click="deleteItem(i)"
           >删除</el-button>
         </el-col>
@@ -70,19 +77,19 @@ export default {
             trigger: 'blur'
           },
           {
-            pattern: /^\d{0,}$/,
+            pattern: /^[0-9]{0,}(\.[0-9]{0,})?$/,
             message: '只输入数字',
             trigger: 'blur'
           }
         ],
-        targetValue: [  
+        targetValue: [
           {
             required: true,
             message: '目标值必填',
             trigger: 'blur'
           },
           {
-            pattern: /^\d{0,}$/,
+            pattern: /^[0-9]{0,}(\.[0-9]{0,})?$/,
             message: '只输入数字',
             trigger: 'blur'
           }

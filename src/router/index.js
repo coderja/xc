@@ -66,12 +66,6 @@ export const constantRoutes = [
         name: 'add',
         component: () => import('@/views/declar/index'),
         meta: { title: 'add', icon: 'table' }
-      },
-      {
-        path: 'add',
-        name: 'add',
-        component: () => import('@/views/declar/index'),
-        meta: { title: 'add', icon: 'table' }
       }
     ]
   },

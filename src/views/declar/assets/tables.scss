@@ -1,0 +1,22 @@
+.t-operate-btn {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: 12px;
+    .text-info {
+      margin-right: 12px;
+    }
+  }
+  .table {
+    border-top: 1px solid #e7e7e7;
+    width: 98%;
+    margin: 0 auto;
+    margin-bottom: 50px;
+    .list {
+      position: relative;
+      background: #fff;
+      top: -12px;
+      left: 12px;
+      width: fit-content;
+    }
+  }

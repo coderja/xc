@@ -3,6 +3,8 @@
     width: 90%;
 }
 
+::v-deep .el-input__inner {line-height: 32px;height: 32px;}
+
 .col-text-tip {
     color:#409EFF;
     display: flex;
@@ -19,4 +21,7 @@
 }
 .text-center {
     text-align: center;
+}
+.mt-5 {
+    margin-top: 5px;;
 }

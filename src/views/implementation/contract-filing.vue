@@ -27,12 +27,12 @@
             placeholder="请输入乙方名称"
           />
         </el-col>
-        <el-button type="primary" round>查询</el-button>
-        <el-button type="success" round>重置</el-button>
+        <el-button type="primary">查询</el-button>
+        <el-button type="success">重置</el-button>
       </el-row>
     </div>
     <div class="contract-filing-operation">
-      <el-button type="primary">新建</el-button>
+      <el-button type="primary" @click="isShowContract = true">新建</el-button>
       <el-button type="danger" @click="detele">删除</el-button>
     </div>
     <div class="contract-filing-table">
@@ -54,7 +54,7 @@
         <el-table-column
           prop="contractType"
           label="合同类型"
-          width="220"
+          width="320"
           align="center"
         />
         <el-table-column
@@ -89,10 +89,27 @@
         </el-table-column>
       </el-table>
     </div>
+    <el-dialog
+      class="dialog"
+      top="5%"
+      :append-to-body="true"
+      width="50%"
+      title="新增合同"
+      :visible.sync="isShowContract"
+      @open="openDialog"
+    >
+      <add-contract />
+      <div class="contract-btn" style="text-align:center">
+        <el-button type="info" @click="checkRule">返回</el-button>
+        <el-button type="primary" @click="resetForm">保存</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
+import addContract from './components/add-contract.vue'
 export default {
+  components: { addContract },
   data() {
     return {
       contractTypeList: [{
@@ -111,7 +128,7 @@ export default {
       contractType: '',
       contractName: '', // 合同名称
       yifangName: '', // 乙方名称
-      tableData:[
+      tableData:[ // 合同数据
         {
           contractName: '项目全生命周期管理平台（时期）项目合同',
           contractType: '项目合同',
@@ -119,25 +136,47 @@ export default {
           partyBName: '航天软测',
           contractSigningDate: '2021-09-22',
         }
-      ]
+      ],
+      isShowContract: false, // 是否显示新增/编辑合同
+      selectRows:[]
     }
   },
   methods: {
-    handleSelectionChange(e) {
-      console.log(e)
+    handleSelectionChange(rows) {
+      this.selectRows = rows
     },
+    /**
+     * 是否要删除的二次确认框
+     */
     detele() {
+      if (this.selectRows.length === 0) {
+        this.$message({
+          type: 'warning',
+          message: '请选择需要删除的行!'
+        })
+        return
+      }
       this.$confirm('是否确认删除？', '确认删除', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
+        //this.selectRows 调接口传的参数
         this.$message({
           type: 'success',
           message: '删除成功!'
         })
       }).catch(() => {
       })
+    },
+    openDialog() {
+      this.$nextTick(() => {})
+    },
+    checkRule() {
+
+    },
+    resetForm() {
+
     }
   }
 }
@@ -166,5 +205,27 @@ export default {
     .contract-filing-table {
       padding: 0 15px;
     }
+}
+::v-deep .el-dialog__header{
+      background: #409EFF;
+      padding: 20px;
+      .el-dialog__title {
+        font-size: 25px;
+        color: #fff;
+      }
+    }
+.contract-btn {
+  ::v-deep .el-button--primary, .el-button--info {
+    padding: 12px 33px;
+}
+}
+::v-deep  .el-dialog__close {
+  &:hover {
+    color: #fff;
+    font-size: 18px;
+  }
+  color: #909399;
+  color: #fff;
+  font-size: 18px;
 }
 </style>

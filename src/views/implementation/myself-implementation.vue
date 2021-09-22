@@ -111,7 +111,8 @@
               fixed="right"
               label="操作"
               align="center"
-              width="100">
+              width="100"
+              @click.stop>
               <template slot-scope="scope">
                 <el-button @click="clickItemMore(scope.row, scope.$index)" type="text" size="small" icon="el-icon-info"></el-button>
                 <div class="table-operation" v-show="scope.row.isShow">
@@ -135,25 +136,30 @@
           </div>
         </div>
       </div>
-      <div class="myself-implementation-right" >
-        <div class="implementation-right-title">
-          <div class="title-item" :class="tabBarIsShow === 'project-summary' ? 'active' : ''" @click="changeTabBar('project-summary')">
-            <i class="el-icon-tickets" />
-            <div class="title-item-text">项目概要</div>
-          </div>
-          <div class="title-item" :class="tabBarIsShow === 'audit-record' ? 'active' : ''" @click="changeTabBar('audit-record')">
-            <i class="el-icon-document" />
-            <div class="title-item-text">审核记录</div>
-          </div>
-          <div class="title-item" :class="tabBarIsShow === 'project-annex' ? 'active' : ''" @click="changeTabBar('project-annex')">
-            <i class="el-icon-folder" />
-            <div class="title-item-text">项目附件</div>
-          </div>
+      <div class="myself-implementation-right" v-show="isShowRight">
+        <div class="implementation-right-cancel" @click="isShowRight = false">
+          <i class="el-icon-arrow-right"></i>
         </div>
-        <div class="implementation-right-content">
-          <project-summary v-show="tabBarIsShow === 'project-summary'" />
-          <audit-record :AuditRecord="AuditRecord" v-show="tabBarIsShow === 'audit-record'" />
-          <project-annex v-show="tabBarIsShow === 'audit-record'" />
+        <div class="implementation-right-container">
+          <div class="implementation-right-title">
+            <div class="title-item" :class="tabBarIsShow === 'project-summary' ? 'active' : ''" @click="changeTabBar('project-summary')">
+              <i class="el-icon-tickets" />
+              <div class="title-item-text">项目概要</div>
+            </div>
+            <div class="title-item" :class="tabBarIsShow === 'audit-record' ? 'active' : ''" @click="changeTabBar('audit-record')">
+              <i class="el-icon-document" />
+              <div class="title-item-text">审核记录</div>
+            </div>
+            <div class="title-item" :class="tabBarIsShow === 'project-annex' ? 'active' : ''" @click="changeTabBar('project-annex')">
+              <i class="el-icon-folder" />
+              <div class="title-item-text">项目附件</div>
+            </div>
+          </div>
+          <div class="implementation-right-content">
+            <project-summary v-show="tabBarIsShow === 'project-summary'" />
+            <audit-record :AuditRecord="AuditRecord" v-show="tabBarIsShow === 'audit-record'" />
+            <project-annex v-show="tabBarIsShow === 'audit-record'" />
+          </div>
         </div>
       </div>
     </div>
@@ -298,6 +304,10 @@ export default {
   width: 100%;
   height: 100%;
   background: #eff0f2;
+  position: absolute;
+  top:0;
+  left:0;
+  padding: 15px;
   p {
     margin: 0;
     padding: 0;
@@ -315,6 +325,7 @@ export default {
     }
   .myself-implementation-container {
     width: 100%;
+    height: 100%;
     display: flex;
     justify-content: space-between;
     .myself-implementation-left {
@@ -383,10 +394,31 @@ export default {
   .myself-implementation-right {
     width: 265px;
     height: 100%;
-    padding: 10px;
-    background: #fff;
-    margin-top: 70px;
-    .implementation-right-title {
+    position: relative;
+    overflow: hidden;
+    .implementation-right-cancel {
+      width: 63px;
+      height: 39px;
+      background: #4180e8;
+      margin: 15px;
+      text-align: center;
+      border-radius: 20px;
+      line-height: 40px;
+      margin-left: 200px;
+      cursor: pointer;
+      transform: translateX(0px);
+      transition: 1s  all;
+      i {
+        color: #fff;
+        font-size: 20px;
+      }
+    }
+    .implementation-right-container {
+      width: 100%;
+      height: 100%;
+      background: #fff;
+      padding: 10px;
+      .implementation-right-title {
       display: flex;
       border-bottom: 1px solid #edeef2;
       color: #bfbfbf;
@@ -399,6 +431,7 @@ export default {
         flex: 1;
         font-size: 14px;
         padding: 10px 0 8px 0;
+        cursor: pointer;
         &.active {
           color: #4180e8;
           border-bottom: 3px solid #4180e8;
@@ -450,6 +483,7 @@ export default {
           }
         }
       }
+    }
     }
   }
   }

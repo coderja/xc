@@ -1,11 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form
-      ref="projectIndicForm"
-      :disabled="true"
-      :model="form"
-      label-width="120px"
-    >
+    <el-form ref="projectIndicForm" :disabled='isDetail' :model="form" label-width="120px">
       <form-label-title>
         <span slot="title">
           项目绩效指标
@@ -33,13 +28,13 @@
 
         <el-col :span="3" class="text-center mt-5">
           <el-button
-            v-if="i == 0"
+            v-if="i == 0 && !isDetail"
             type="primary"
             size="small"
             @click="addItem"
           >新增</el-button>
           <el-button
-            v-else
+            v-if="i != 0 && !isDetail"
             type="danger"
             size="small"
             @click="deleteItem(i)"
@@ -97,7 +92,11 @@ export default {
       }
     }
   },
-  computed: {},
+  computed: {
+    isDetail() {
+      return this.$route.query.detail
+    }
+  },
   methods: {
     addItem() {
       this.form.indicatorFormList.push({ indicator: '', targetValue: '' })
@@ -120,4 +119,7 @@ export default {
 
 <style scoped lang="scss">
 @import '../assets/index.scss';
+::v-deep .el-form {
+  margin-bottom: 30px;
+}
 </style>

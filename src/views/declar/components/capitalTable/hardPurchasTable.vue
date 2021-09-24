@@ -8,11 +8,11 @@
     <div class="t-operate-btn">
       <span class="text-info">合计</span>
       <span class="text-info">{{ total }}</span>
-      <el-button type="primary" size="small">模板下载</el-button>
-      <el-button type="primary" size="small">数据导入</el-button>
-      <el-button type="danger" size="small">删除</el-button>
+      <el-button type="primary" size="small"  v-if='!isDetail'>模板下载</el-button>
+      <el-button type="primary" size="small"  v-if='!isDetail'>数据导入</el-button>
+      <el-button type="danger" size="small"  v-if='!isDetail' @click='deleteTable'>删除</el-button>
     </div>
-    <el-form ref="tableForm" :model="tableInfo" :rules="quotedInfRules">
+    <el-form ref="HPForm" :model="tableInfo" :disabled='isDetail' :rules="quotedInfRules">
       <el-table
         :data="tableInfo.tableDatas"
         style="width: 100%"
@@ -28,65 +28,65 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="设备分类" prop="sysName" width="100">
+        <el-table-column label="设备分类" prop="equiClass" width="120">
           <!-- <template slot="header">
             <span><i style="color: #f56c6c">*</i> 系统名称</span>
           </template> -->
           <template slot-scope="scope">
             <el-form-item
               :rules="quotedInfRules.name"
-              :prop="'tableDatas.' + scope.$index + '.sysName'"
+              :prop="'tableDatas.' + scope.$index + '.equiClass'"
             >
-              <el-input v-model="scope.row.sysName" />
+              <el-input v-model="scope.row.equiClass" />
             </el-form-item>
           </template>
         </el-table-column>
 
-        <el-table-column label="设备名称" prop="childSysName" width="100">
+        <el-table-column label="设备名称" prop="equiName" width="120">
           <template slot-scope="scope">
             <el-form-item
               :rules="quotedInfRules.name"
-              :prop="'tableDatas.' + scope.$index + '.childSysName'"
+              :prop="'tableDatas.' + scope.$index + '.equiName'"
             >
-              <el-input v-model="scope.row.childSysName" />
+              <el-input v-model="scope.row.equiName" />
             </el-form-item>
           </template>
         </el-table-column>
 
-        <el-table-column label="设备参数" prop="funcName" width="100">
+        <el-table-column label="设备参数" prop="equiParams" width="120">
           <template slot-scope="scope">
             <el-form-item
               :rules="quotedInfRules.name"
-              :prop="'tableDatas.' + scope.$index + '.funcName'"
+              :prop="'tableDatas.' + scope.$index + '.equiParams'"
             >
-              <el-input v-model="scope.row.funcName" />
+              <el-input v-model="scope.row.equiParams" />
             </el-form-item>
           </template>
         </el-table-column>
 
-        <el-table-column label="市场调研情况说明" prop="funcDesc">
+        <el-table-column label="市场调研情况说明" prop="markRepExplain">
           <template slot-scope="scope">
             <el-form-item
               :rules="quotedInfRules.name"
-              :prop="'tableDatas.' + scope.$index + '.funcDesc'"
+              :prop="'tableDatas.' + scope.$index + '.markRepExplain'"
             >
-              <el-input v-model="scope.row.funcDesc" />
+              <el-input v-model="scope.row.markRepExplain" />
             </el-form-item>
           </template>
         </el-table-column>
 
-        <el-table-column label="品牌及设备型号" prop="funcPointDesc">
+        <el-table-column label="品牌及设备型号" prop="unitType">
           <template slot-scope="scope">
             <el-form-item
               :rules="quotedInfRules.name"
-              :prop="'tableDatas.' + scope.$index + '.funcPointDesc'"
+              :prop="'tableDatas.' + scope.$index + '.unitType'"
             >
-              <el-input v-model="scope.row.funcPointDesc" />
+              <el-input v-model="scope.row.unitType" />
             </el-form-item>
           </template>
         </el-table-column>
 
-        <el-table-column label="单价（万元）" prop="price" width="100">
+        <el-table-column label="单价（万元）" prop="price" width="140">
           <template slot-scope="scope">
             <el-form-item
               :rules="quotedInfRules.number"
@@ -108,7 +108,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="小计（万元）" prop="total" width="100">
+        <el-table-column label="小计（万元）" prop="total" width="120">
           <template slot-scope="scope">
             <el-form-item
               :rules="quotedInfRules.number"
@@ -119,14 +119,14 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="操作" width="100">
+        <el-table-column label="操作" width="100"  v-if='!isDetail' fixed='right'>
           <template slot-scope="scope">
             <el-button
               icon="el-icon-delete"
               title="删除"
               type="danger"
               size="mini"
-              :disabled="!canEdit"
+              :disabled="canEdit"
               @click="deleteRow(scope.$index, scope.row)"
             />
           </template>
@@ -149,6 +149,11 @@ export default {
       type: Boolean
     }
   },
+  computed: {
+    isDetail() {
+      return this.$route.query.detail
+    }
+  },
   data() {
     const validateNum = (rule, value, callback) => {
       const regStr = /^(\d+)(\.\d+)?$/
@@ -162,14 +167,24 @@ export default {
       tableInfo: {
         tableDatas: [
           {
-            sysName: '1', // 系统名称
-            childSysName: '2', // 子系统名称
-            funcName: '22', // 功能模块名称
-            funcDesc: '21', // 功能描述
-            funcPointDesc: '12', // 功能点描述
-            price: '222', // 单价
-            number: '22222', // 数量
-            total: '10' // 小计
+            equiClass: '1', // 设备分类
+            equiName: '1', // 设备名称
+            equiParams: '2', // 设备参数
+            markRepExplain: '22', // 市场调研情况说明
+            unitType: '21', // 品牌及设备型号
+            price: '4', // 单价
+            number: '4', // 数量
+            total: '' // 小计
+          },
+          {
+            equiClass: '1', // 设备分类
+            equiName: '1', // 设备名称
+            equiParams: '2', // 设备参数
+            markRepExplain: '22', // 市场调研情况说明
+            unitType: '21', // 品牌及设备型号
+            price: '4', // 单价
+            number: '4', // 数量
+            total: '' // 小计
           }
         ]
       },
@@ -178,7 +193,7 @@ export default {
         name: [
           {
             required: false,
-            pattern: /^[A-Za-z0-9\u4e00-\u9fa5]$/,
+            pattern: /^[A-Za-z0-9\u4e00-\u9fa5]{0,32}$/,
             message: '请输入中英文数字',
             trigger: 'blur'
           }
@@ -200,24 +215,38 @@ export default {
       }
     }
   },
-  watch: {},
+  watch: {
+    'tableInfo.tableDatas':{
+      handler() {
+        this.tableInfo.tableDatas.map(el=>{
+          if(el.price && el.number && !isNaN(el.price)&&!isNaN(el.number)) {
+            return el.total = el.price * el.number
+          }
+        })
+      },
+      immediate: true
+    } 
+
+  },
   mounted() {},
   methods: {
-    deleteRow(i, row) {
-      this.$confirm('确实要删除当前行？', '删除提示', {
-        confirmButtonText: this.$l('btn_confirm'),
-        cancelButtonText: this.$l('btn_cancel'),
+    deleteTable() {
+      this.$confirm('确实要删除当前表格的数据？', '删除提示', {
+        confirmButtonText: '确认',
+        cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        delLandPlotById({ id: row.id }).then(() => {
-          this.$message({
-            message: '删除成功',
-            type: 'success'
-          })
-          this.$root.Bus.$emit('reloadMap')
+          this.tableInfo.tableDatas = []
+        })
+    },
+    deleteRow(i, row) {
+      this.$confirm('确实要删除当前行？', '删除提示', {
+        confirmButtonText: '确认',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
           this.tableInfo.tableDatas.splice(i, 1)
         })
-      })
     },
     getSummaries(param) {
       var _this = this

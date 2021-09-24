@@ -8,11 +8,11 @@
     <div class="t-operate-btn">
       <span class="text-info">合计</span>
       <span class="text-info">{{ total }}</span>
-      <el-button type="primary" size="small">模板下载</el-button>
-      <el-button type="primary" size="small">数据导入</el-button>
-      <el-button type="danger" size="small">删除</el-button>
+      <el-button type="primary" size="small" v-if='!isDetail'>模板下载</el-button>
+      <el-button type="primary" size="small" v-if='!isDetail'>数据导入</el-button>
+      <el-button type="danger" size="small" v-if='!isDetail' @click='deleteTable'>删除</el-button>
     </div>
-    <el-form ref="tableForm" :model="tableInfo" :rules="quotedInfRules">
+    <el-form ref="HOForm" :model="tableInfo" :disabled='isDetail' :rules="quotedInfRules">
       <el-table
         :data="tableInfo.tableDatas"
         style="width: 100%"
@@ -42,46 +42,46 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="资产编号" prop="childSysName" width="100">
+        <el-table-column label="资产编号" prop="assetsNum" width="100">
           <template slot-scope="scope">
             <el-form-item
               :rules="quotedInfRules.name"
-              :prop="'tableDatas.' + scope.$index + '.childSysName'"
+              :prop="'tableDatas.' + scope.$index + '.assetsNum'"
             >
-              <el-input v-model="scope.row.childSysName" />
+              <el-input v-model="scope.row.assetsNum" />
             </el-form-item>
           </template>
         </el-table-column>
 
-        <el-table-column label="采购时间" prop="funcName" width="100">
+        <el-table-column label="采购时间" prop="purchaseDate" width="100">
           <template slot-scope="scope">
             <el-form-item
               :rules="quotedInfRules.name"
-              :prop="'tableDatas.' + scope.$index + '.funcName'"
+              :prop="'tableDatas.' + scope.$index + '.purchaseDate'"
             >
-              <el-input v-model="scope.row.funcName" />
+              <el-input v-model="scope.row.purchaseDate" />
             </el-form-item>
           </template>
         </el-table-column>
 
-        <el-table-column label="过保时间" prop="funcDesc">
+        <el-table-column label="过保时间" prop="WarrantyDate">
           <template slot-scope="scope">
             <el-form-item
               :rules="quotedInfRules.name"
-              :prop="'tableDatas.' + scope.$index + '.funcDesc'"
+              :prop="'tableDatas.' + scope.$index + '.WarrantyDate'"
             >
-              <el-input v-model="scope.row.funcDesc" />
+              <el-input v-model="scope.row.WarrantyDate" />
             </el-form-item>
           </template>
         </el-table-column>
 
-        <el-table-column label="设备单价（万元）" prop="funcPointDesc">
+        <el-table-column label="设备单价（万元）" prop="price">
           <template slot-scope="scope">
             <el-form-item
               :rules="quotedInfRules.name"
-              :prop="'tableDatas.' + scope.$index + '.funcPointDesc'"
+              :prop="'tableDatas.' + scope.$index + '.price'"
             >
-              <el-input v-model="scope.row.funcPointDesc" />
+              <el-input v-model="scope.row.price" />
             </el-form-item>
           </template>
         </el-table-column>
@@ -97,73 +97,62 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="往期运维结束时间" prop="price" width="100">
+        <el-table-column label="往期运维结束时间" prop="prevOperateEndDate" width="100">
           <template slot-scope="scope">
             <el-form-item
               :rules="quotedInfRules.number"
-              :prop="'tableDatas.' + scope.$index + '.price'"
+              :prop="'tableDatas.' + scope.$index + '.prevOperateEndDate'"
             >
-              <el-input v-model="scope.row.price" />
+              <el-input v-model="scope.row.prevOperateEndDate" />
             </el-form-item>
           </template>
         </el-table-column>
 
-        <el-table-column label="往期运维费用（万元）" prop="total" width="100">
+        <el-table-column label="往期运维费用（万元）" prop="prevOperateCost" width="100">
           <template slot-scope="scope">
             <el-form-item
               :rules="quotedInfRules.number"
-              :prop="'tableDatas.' + scope.$index + '.total'"
+              :prop="'tableDatas.' + scope.$index + '.prevOperateCost'"
             >
-              <el-input v-model="scope.row.total" />
-            </el-form-item>
-          </template>
-        </el-table-column>
-
-        <el-table-column label="往期运维费用（万元）" prop="total" width="100">
-          <template slot-scope="scope">
-            <el-form-item
-              :rules="quotedInfRules.number"
-              :prop="'tableDatas.' + scope.$index + '.total'"
-            >
-              <el-input v-model="scope.row.total" />
+              <el-input v-model="scope.row.prevOperateCost" />
             </el-form-item>
           </template>
         </el-table-column>
 
         <el-table-column
-          label="往期运维费用占比（运维费用/建设费用）"
-          prop="number"
+          label="本期运维费用占比（运维费用/建设费用）"
+          prop="nowOperateCostRatio"
           width="100"
         >
           <template slot-scope="scope">
             <el-form-item
               :rules="quotedInfRules.number"
-              :prop="'tableDatas.' + scope.$index + '.number'"
+              :prop="'tableDatas.' + scope.$index + '.nowOperateCostRatio'"
             >
-              <el-input v-model="scope.row.number" />
+              <el-input v-model="scope.row.nowOperateCostRatio" />
             </el-form-item>
           </template>
         </el-table-column>
 
-        <el-table-column label="本期运维费用（万元）" prop="number" width="100">
+        <el-table-column label="本期运维费用（万元）" prop="nowOperateCost" width="100">
           <template slot-scope="scope">
             <el-form-item
               :rules="quotedInfRules.number"
-              :prop="'tableDatas.' + scope.$index + '.number'"
+              :prop="'tableDatas.' + scope.$index + '.nowOperateCost'"
             >
-              <el-input v-model="scope.row.number" />
+              <el-input v-model="scope.row.nowOperateCost" />
             </el-form-item>
           </template>
         </el-table-column>
 
-        <el-table-column label="操作" width="100">
+        <el-table-column label="操作" width="100"  v-if='!isDetail' fixed='right'>
           <template slot-scope="scope">
             <el-button
               icon="el-icon-delete"
               title="删除"
               type="danger"
               size="mini"
-              :disabled="!canEdit"
+              :disabled="canEdit"
               @click="deleteRow(scope.$index, scope.row)"
             />
           </template>
@@ -186,6 +175,11 @@ export default {
       type: Boolean
     }
   },
+  computed: {
+    isDetail() {
+      return this.$route.query.detail
+    }
+  },
   data() {
     const validateNum = (rule, value, callback) => {
       const regStr = /^(\d+)(\.\d+)?$/
@@ -200,13 +194,15 @@ export default {
         tableDatas: [
           {
             sysName: '1', // 系统名称
-            childSysName: '2', // 子系统名称
-            funcName: '22', // 功能模块名称
-            funcDesc: '21', // 功能描述
-            funcPointDesc: '12', // 功能点描述
-            price: '222', // 单价
-            number: '22222', // 数量
-            total: '10' // 小计
+            assetsNum: '2', // 资产编号
+            purchaseDate: '22', // 采购时间
+            WarrantyDate: '22', // 过保时间
+            price: '22', // 设备单价
+            number: '22', // 数量
+            prevOperateEndDate: '12', // 往期运维结束时间
+            prevOperateCost: '12', // 往期运维费用
+            nowOperateCostRatio: '222', // 本期运维费用占比
+            nowOperateCost: '22222', // 本期运维费用
           }
         ]
       },
@@ -215,7 +211,7 @@ export default {
         name: [
           {
             required: false,
-            pattern: /^[A-Za-z0-9\u4e00-\u9fa5]$/,
+            pattern: /^[A-Za-z0-9\u4e00-\u9fa5]{0,32}$/,
             message: '请输入中英文数字',
             trigger: 'blur'
           }
@@ -240,21 +236,23 @@ export default {
   watch: {},
   mounted() {},
   methods: {
-    deleteRow(i, row) {
-      this.$confirm('确实要删除当前行？', '删除提示', {
-        confirmButtonText: this.$l('btn_confirm'),
-        cancelButtonText: this.$l('btn_cancel'),
+    deleteTable() {
+      this.$confirm('确实要删除当前表格的数据？', '删除提示', {
+        confirmButtonText: '确认',
+        cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        delLandPlotById({ id: row.id }).then(() => {
-          this.$message({
-            message: '删除成功',
-            type: 'success'
-          })
-          this.$root.Bus.$emit('reloadMap')
+          this.tableInfo.tableDatas = []
+        })
+    },
+    deleteRow(i, row) {
+      this.$confirm('确实要删除当前行？', '删除提示', {
+        confirmButtonText: '确认',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
           this.tableInfo.tableDatas.splice(i, 1)
         })
-      })
     },
     getSummaries(param) {
       var _this = this
@@ -270,13 +268,15 @@ export default {
         const values = data.map(item => {
           const fileds = [
             'sysName',
-            'childSysName',
-            'funcName',
-            'funcDesc',
-            'funcPointDesc',
+            'assetsNum',
+            'purchaseDate',
+            'WarrantyDate',
             'price',
             'number',
-            'total'
+            'prevOperateEndDate',
+            'prevOperateCost',
+            'nowOperateCostRatio',
+            'nowOperateCost'
           ]
           if (fileds.indexOf(column.property) !== -1) {
             if (column.property == 'total') {

@@ -4,6 +4,7 @@
       ref="pojectInfoForm"
       :model="form"
       :rules="formRules"
+      :disabled='isDetail'
       label-width="120px"
     >
       <form-label-title>
@@ -22,12 +23,21 @@
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="8">
+        <el-col :span="8" class="txt-overflow">
           <el-form-item label="项目类型" prop="proType">
-            <el-input
-              v-model="form.proType"
-              @focus="proTypeDialogVisible = true"
-            />
+            <el-tooltip
+              class="item"
+              effect="dark"
+              :content="form.proType"
+              :disabled="!form.proType"
+              placement="top-start"
+            >
+              <el-input
+                ref='protype'
+                v-model="form.proType"
+                @focus="proTypeDialogVisible = true"
+              />
+            </el-tooltip>
           </el-form-item>
         </el-col>
         <el-col :span="8">
@@ -57,7 +67,7 @@
           </el-form-item>
         </el-col>
 
-        <el-col :span="8">
+        <el-col v-if="isShowLastSysName" :span="8">
           <el-form-item label="往期系统名称" prop="lastSysName">
             <el-input v-model="form.lastSysName" />
           </el-form-item>
@@ -163,14 +173,32 @@
         <el-button type="success" @click="resetForm">重置</el-button>
       </div>
     </el-dialog>
+
+    <el-dialog
+      class="dialog"
+      top="5%"
+      :append-to-body="true"
+      width="50%"
+      title="政务需求总量"
+      :visible.sync="isShowReqTotal"
+      @open="openDialog"
+    >
+      <req-total-form />
+      <div class="contract-btn" style="text-align:center">
+        <el-button type="info" @click="checkRule">返回</el-button>
+        <el-button type="primary" @click="resetForm">保存</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import dataTypeCheckbox from '@/views/declar/components/dataType/checkbox.vue'
+import reqTotalForm from '@/views/declar/components/reqTotal/form.vue'
 export default {
   components: {
-    dataTypeCheckbox
+    dataTypeCheckbox,
+    reqTotalForm
   },
   data() {
     return {
@@ -182,6 +210,7 @@ export default {
         { label: '社会综治', code: '4' },
         { label: '业务能力提升', code: '5' }
       ],
+      isShowReqTotal: false,
       proTypeDialogVisible: false,
       protDataForm: {},
       form: {
@@ -220,10 +249,10 @@ export default {
           {
             required: true,
             message: '项目类型必填',
-            trigger: 'blur'
+            trigger: 'change'
           },
           {
-            pattern: /^[A-Za-z0-9\u4e00-\u9fa5]$/,
+            pattern: /^[A-Za-z0-9\u4e00-\u9fa5]{0,32}$/,
             message: '只能输入中英文数字',
             trigger: 'blur'
           }
@@ -249,7 +278,7 @@ export default {
             trigger: 'blur'
           },
           {
-            pattern: /^[A-Za-z0-9\u4e00-\u9fa5]$/,
+            pattern: /^[A-Za-z0-9\u4e00-\u9fa5]{0,32}$/,
             message: '只能输入中英文数字',
             trigger: 'blur'
           }
@@ -268,7 +297,7 @@ export default {
             trigger: 'blur'
           },
           {
-            pattern: /^[A-Za-z0-9\u4e00-\u9fa5]$/,
+            pattern: /^[A-Za-z0-9\u4e00-\u9fa5]{0,32}$/,
             message: '只能输入中英文数字',
             trigger: 'blur'
           }
@@ -280,7 +309,7 @@ export default {
             trigger: 'blur'
           },
           {
-            pattern: /^[A-Za-z0-9\u4e00-\u9fa5]$/,
+            pattern: /^[A-Za-z0-9\u4e00-\u9fa5]{0,32}$/,
             message: '只能输入中英文数字',
             trigger: 'blur'
           }
@@ -292,7 +321,7 @@ export default {
             trigger: 'blur'
           },
           {
-            pattern: /^[A-Za-z0-9\u4e00-\u9fa5]$/,
+            pattern: /^[A-Za-z0-9\u4e00-\u9fa5]{0,32}$/,
             message: '只能输入中英文数字',
             trigger: 'blur'
           }
@@ -348,12 +377,25 @@ export default {
             trigger: 'blur'
           },
           {
-            pattern: /^[A-Za-z0-9\u4e00-\u9fa5]$/,
+            pattern: /^[A-Za-z0-9\u4e00-\u9fa5]{0,}$/,
             message: '只能输入中英文数字',
             trigger: 'blur'
           }
         ] // 实施内容
       }
+    }
+  },
+  computed: {
+    isShowLastSysName() {
+      const proType = this.form.proType
+      return (
+        proType.includes('软件运维') ||
+        proType.includes('软件开发') ||
+        proType.includes('软件采购')
+      )
+    },
+    isDetail() {
+      return this.$route.query.detail
     }
   },
   methods: {
@@ -412,7 +454,7 @@ export default {
         operate.map(el => {
           operateStr.push(`运维/${el}`)
         })
-        operateStr = operate.join(',')
+        operateStr = operateStr.join(',')
         this.form.proType.push(operateStr)
       }
 
@@ -424,6 +466,7 @@ export default {
         this.form.proType.push(serviceStr)
       }
       this.form.proType = this.form.proType.join(',')
+      this.$emit('handle-project-type', this.form.proType)
       this.proTypeDialogVisible = false
     },
     proTypeDatas(data) {
@@ -444,4 +487,9 @@ export default {
 
 <style scoped lang="scss">
 @import '../assets/index.scss';
+::v-deep .txt-overflow .el-input__inner {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+::v-deep .el-form{margin-bottom: 30px;}
 </style>

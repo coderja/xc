@@ -136,6 +136,21 @@ export const constantRoutes = [
         name: 'Acceptance-application',
         component: () => import('@/views/implementation/acceptance-application'),
         meta: { title: '验收申请' }
+      }, { // 所有实施
+        path: '/all-implementation',
+        name: 'All-implementation',
+        component: () => import('@/views/implementation/all-implementation'),
+        meta: { title: '所有实施' }
+      }, { // 验收申请审批
+        path: '/acceptance-confirmation',
+        name: 'Acceptance-confirmation',
+        component: () => import('@/views/implementation/acceptance-confirmation'),
+        meta: { title: '验收申请审批' }
+      }, { // 验收确认
+        path: '/acceptance-confirmation',
+        name: 'Acceptance-confirmation',
+        component: () => import('@/views/implementation/acceptance-confirmation'),
+        meta: { title: '验收确认' }
       }
     ]
   },

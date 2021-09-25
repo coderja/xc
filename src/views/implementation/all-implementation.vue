@@ -18,7 +18,17 @@
           />
         </el-col>
         <el-col :span="4">
-          <el-select v-model="status" multiple placeholder="请选择">
+          <el-select v-model="implementationUnit" multiple placeholder="请选择实施单位/相关处室">
+            <el-option
+              v-for="item in implementationUnitList"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </el-col>
+        <el-col :span="4">
+          <el-select v-model="status" multiple placeholder="请选择项目状态">
             <el-option
               v-for="item in projectStatus"
               :key="item.value"
@@ -50,25 +60,30 @@
             @selection-change="handleSelectionChange">
             <el-table-column
               type="selection"
-              width="55"
+              width="35"
               align="center"
             />
             <el-table-column
               type="index"
               label="序号"
-              width="120"
+              width="50"
               align="center"
             />
             <el-table-column
               prop="name"
               label="项目名称"
-              width="280"
+              align="center"
+            />
+            <el-table-column
+              prop="implementationUnit"
+              label="实施单位/相关处室"
+              width="180"
               align="center"
             />
             <el-table-column
               prop="type"
               label="项目类型"
-              width="280"
+              width="200"
               align="center"
             />
             <el-table-column
@@ -196,28 +211,28 @@ export default {
           operationMaintenanceFunds: '0', // 运维资金
           totalAmount: '200.00', // 估算总金额
           projectStatus: '待实施备案', // 项目状态
+          implementationUnit: '办公室', // 实施单位
           tableOPertion: [
             {
               value: '0',
-              label: '实施备案'
+              label: '查看实施备案',
+              url: '/implementation-filing'
             }, {
               value: '1',
-              label: '招投标备案'
+              label: '查看招投标备案',
+              url: '/bidding-filing'
             }, {
               value: '3',
-              label: '合同备案'
+              label: '查看合同备案',
+              url: '/contract-filing'
             }, {
               value: '4',
-              label: '项目跟踪'
+              label: '查看项目跟踪',
+              url: '/project-tracking'
             }, {
               value: '5',
-              label: '项目变更'
-            }, {
-              value: '6',
-              label: '验收申请'
-            }, {
-              value: '7',
-              label: '验收备案'
+              label: '验收申请审批',
+              url: '/acceptance-confirmation'
             }
           ],
           isShow: false
@@ -254,6 +269,13 @@ export default {
         }
       ],
       tabBarIsShow: 'project-summary',
+      implementationUnitList: [
+        {
+          value: '1',
+          label: '请选择实施单位/相关处室'
+        }
+      ],
+      implementationUnit: '',
     }
   },
   methods: {
@@ -279,7 +301,13 @@ export default {
      * 点击操作项
      */
     changeItemStatus(scope, item) {
-      console.log(scope.row, item)
+      console.log(item, 'kkkk')
+      this.$router.push({
+        path: item.url,
+        query: {
+          type: 'all'
+        }
+      })
     },
     clickItemMore(item, i) {
       console.log(item, i)
@@ -302,6 +330,7 @@ export default {
       this.keyword = ''
       this.years = ''
       this.status = ''
+      this.implementationUnit = ''
     }
   }
 }
@@ -368,7 +397,7 @@ export default {
         font-size: 20px;
       }
       .table-operation {
-          max-width: 250px;
+          max-width: 280px;
           min-width: 110px;
           padding: 5px 0;
           border: 1px solid #d2d2d2;
@@ -378,7 +407,7 @@ export default {
           background: #fff;
           background: rgb(242, 242, 242);
           .table-opertion-item {
-            padding: 0 24px 0 10px;
+            padding: 0 10px 0 10px;
             font-size: 12px;
             cursor: pointer;
             &.table-opertion-item:hover {

@@ -80,7 +80,7 @@
     </div>
     <div class="implementation-table-details">
       <div class="table-title">项目实施进度报告上传</div>
-      <div class="bidding-announcement">
+      <div class="bidding-announcement" v-show="!isAll"> 
         <p>注：请上传项目实施进度报告和架构治理要求自查报告</p>
         <el-button type="primary">请上传项目实施进度报告模板</el-button>
       </div>
@@ -131,7 +131,7 @@
             align="center"
             width="250">
             <template slot-scope="scope">
-              <el-button v-show="!scope.row.fileUrl" @click="handleClick(scope.row)" type="primary" size="small">上传</el-button>
+              <el-button v-show="!scope.row.fileUrl && !isAll" @click="handleClick(scope.row)" type="primary" size="small">上传</el-button>
               <el-button v-show="scope.row.fileUrl" type="primary" size="small">下载</el-button>
               <el-button v-show="scope.row.fileUrl" type="success" size="small">预览</el-button>
               <el-button v-show="scope.row.fileUrl" type="danger" size="small">删除</el-button>
@@ -142,7 +142,7 @@
     </div>
     <div class="submit-btn">
       <el-button type="info">返回</el-button>
-      <el-button type="primary" @click="submit">提交</el-button>
+      <el-button v-show="!isAll" type="primary" @click="submit">提交</el-button>
     </div>
   </div>
 </template>
@@ -155,10 +155,14 @@ export default {
         reportType: '月报',
         reportingCycle: '2021-09-21',
         selfEvaluator: '',
-        selfAssessmentTime: '',
+        selfAssessmentTime: ''
       }],
       biddingAnnouncement: '', // 招标公告链接
+      isAll: '',
     }
+  },
+  created() {
+    this.isAll = this.$route.query.type === 'all'
   },
   methods: {
     /**

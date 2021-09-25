@@ -22,16 +22,16 @@
         </el-col>
         <el-col :span="4">
           <el-input
-            v-model="yifangName"
+            v-model="partyBName"
             resize="none"
             placeholder="请输入乙方名称"
           />
         </el-col>
         <el-button type="primary">查询</el-button>
-        <el-button type="success">重置</el-button>
+        <el-button type="success" @click="reset">重置</el-button>
       </el-row>
     </div>
-    <div class="contract-filing-operation">
+    <div class="contract-filing-operation" v-if="!isAll">
       <el-button type="primary" @click="isShowContract = true">新建</el-button>
       <el-button type="danger" @click="detele">删除</el-button>
     </div>
@@ -84,7 +84,7 @@
           align="center"
           width="100">
           <template slot-scope="scope">
-            <el-button @click="clickItemMore(scope.row, scope.$index)" type="primary" size="small">编辑</el-button>
+            <el-button @click="clickItemMore(scope.row, scope.$index)" type="primary" size="small">{{isAll ? '查看' : '编辑'}}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -94,14 +94,14 @@
       top="5%"
       :append-to-body="true"
       width="50%"
-      title="新增合同"
+      :title="isAll ? '查看合同' : '新增合同'"
       :visible.sync="isShowContract"
       @open="openDialog"
     >
-      <add-contract />
+      <add-contract ref="addContract" :isAll="isAll" />
       <div class="contract-btn" style="text-align:center">
-        <el-button type="info" @click="checkRule">返回</el-button>
-        <el-button type="primary" @click="resetForm">保存</el-button>
+        <el-button type="info" @click="cancel">返回</el-button>
+        <el-button v-show="!isAll" type="primary" @click="confirmForm">保存</el-button>
       </div>
     </el-dialog>
   </div>
@@ -127,7 +127,7 @@ export default {
       }],
       contractType: '',
       contractName: '', // 合同名称
-      yifangName: '', // 乙方名称
+      partyBName: '', // 乙方名称
       tableData:[ // 合同数据
         {
           contractName: '项目全生命周期管理平台（时期）项目合同',
@@ -138,8 +138,12 @@ export default {
         }
       ],
       isShowContract: false, // 是否显示新增/编辑合同
-      selectRows:[]
+      selectRows:[],
+      isAll: false,
     }
+  },
+  created() {
+    this.isAll = this.$route.query.type === 'all'
   },
   methods: {
     handleSelectionChange(rows) {
@@ -172,11 +176,22 @@ export default {
     openDialog() {
       this.$nextTick(() => {})
     },
-    checkRule() {
-
+    /**
+     * 弹框的返回事件
+     */
+    cancel() {
+      this.isShowContract = false
+      this.$refs.addContract.$refs.form.resetFields()
     },
-    resetForm() {
-
+    confirmForm() {
+      
+    },
+    reset() {
+      this.contractName = ''
+      this.contractType = ''
+    },
+    clickItemMore() {
+      this.isShowContract = true
     }
   }
 }

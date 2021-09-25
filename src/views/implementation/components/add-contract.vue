@@ -10,36 +10,36 @@
         <el-row>
           <el-col :span="10">
             <el-form-item label="合同名称" prop="contractName">
-              <el-input v-model="form.contractName" />
+              <el-input v-model="form.contractName" :disabled="isAll" />
             </el-form-item>
           </el-col>
           <el-col :span="10" :offset="2">
             <el-form-item label="合同金额" prop="contractAmount">
-              <el-input v-model="form.contractAmount" />
+              <el-input v-model="form.contractAmount" :disabled="isAll" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="10">
             <el-form-item label="甲方名称" prop="partyAName">
-              <el-input v-model="form.partyAName" />
+              <el-input v-model="form.partyAName" :disabled="isAll" />
             </el-form-item>
           </el-col>
           <el-col :span="10" :offset="2">
             <el-form-item label="乙方名称" prop="partyBName">
-              <el-input v-model="form.partyBName" />
+              <el-input v-model="form.partyBName" :disabled="isAll" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="10">
             <el-form-item label="甲方代码" prop="partyACode">
-              <el-input v-model="form.partyACode" />
+              <el-input v-model="form.partyACode" :disabled="isAll" />
             </el-form-item>
           </el-col>
           <el-col :span="10" :offset="2">
             <el-form-item label="乙方代码" prop="partyBCode">
-              <el-input v-model="form.partyBCode" />
+              <el-input v-model="form.partyBCode" :disabled="isAll" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -50,6 +50,7 @@
                 v-model="form.signingDate"
                 type="date"
                 placeholder="请选择签订日期"
+                :disabled="isAll"
               />
             </el-form-item>
           </el-col>
@@ -59,6 +60,7 @@
                 v-model="form.filingDate"
                 type="date"
                 placeholder="请选择备案日期"
+                :disabled="isAll"
               />
             </el-form-item>
           </el-col>
@@ -70,6 +72,7 @@
                 v-model="form.contractStartTime"
                 type="date"
                 placeholder="请选择合同开始日期"
+                :disabled="isAll"
               />
             </el-form-item>
           </el-col>
@@ -79,6 +82,7 @@
                 v-model="form.contractEndTime"
                 type="date"
                 placeholder="请选择合同结束日期"
+                :disabled="isAll"
               />
             </el-form-item>
           </el-col>
@@ -91,6 +95,7 @@
                 :rows="3"
                 placeholder="请输入内容"
                 v-model="form.remark"
+                :disabled="isAll"
               />
             </el-form-item>
           </el-col>
@@ -131,10 +136,10 @@
           align="center"
           width="250">
           <template slot-scope="scope">
-            <el-button v-show="!scope.row.fileUrl" @click="handleClick(scope.row)" type="primary" size="small">上传</el-button>
+            <el-button v-show="!scope.row.fileUrl && !isAll" @click="handleClick(scope.row)" type="primary" size="small">上传</el-button>
             <el-button v-show="scope.row.fileUrl" type="primary" size="small">下载</el-button>
             <el-button v-show="scope.row.fileUrl" type="success" size="small">预览</el-button>
-            <el-button v-show="scope.row.fileUrl" type="danger" size="small">删除</el-button>
+            <el-button v-show="scope.row.fileUrl && !isAll" type="danger" size="small">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -143,6 +148,12 @@
 </template>
 <script>
 export default {
+  props: {
+    isAll: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     let validateEnrollEndTime = (rule, value, callback) => {
       if (

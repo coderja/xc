@@ -81,7 +81,7 @@
     <div class="implementation-table-details">
       <div class="table-title">招投标备案</div>
       <div class="bidding-announcement">
-        <p>招标公告链接：</p><el-input v-model="biddingAnnouncement" placeholder="请输入招标公告链接" />
+        <p>招标公告链接：</p><el-input v-model="biddingAnnouncement" placeholder="请输入招标公告链接" :disabled="!isAll ? false : true" />
       </div>
       <div class="table-details">
         <el-table
@@ -118,10 +118,10 @@
             align="center"
             width="250">
             <template slot-scope="scope">
-              <el-button v-show="!scope.row.fileUrl" @click="handleClick(scope.row)" type="primary" size="small">上传</el-button>
+              <el-button v-show="!scope.row.fileUrl && !isAll" @click="handleClick(scope.row)" type="primary" size="small">上传</el-button>
               <el-button v-show="scope.row.fileUrl" type="primary" size="small">下载</el-button>
               <el-button v-show="scope.row.fileUrl" type="success" size="small">预览</el-button>
-              <el-button v-show="scope.row.fileUrl" type="danger" size="small">删除</el-button>
+              <el-button v-show="scope.row.fileUrl && !isAll" type="danger" size="small" @click="deleteRow(scope.row, scope.$index)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -129,7 +129,7 @@
     </div>
     <div class="submit-btn">
       <el-button type="info">返回</el-button>
-      <el-button type="primary" @click="submit">提交</el-button>
+      <el-button v-show="!isAll" type="primary" @click="submit">提交</el-button>
     </div>
   </div>
 </template>
@@ -149,7 +149,11 @@ export default {
         fileUrl: '4444'
       }],
       biddingAnnouncement: '', // 招标公告链接
+      isAll: false
     }
+  },
+  created() {
+    this.isAll = this.$route.query.type === 'all'
   },
   methods: {
     /**
@@ -160,6 +164,18 @@ export default {
         this.$message.error('请填写招标公告链接或者上传招标文件！')
         return
       }
+    },
+    deleteRow(item, i) {
+      console.log(item, i)
+      this.tableData[i] = {
+        updateTime: '',
+        uploadedFile: '',
+        fileName: '招标文件签章页',
+        fileUrl: ''
+      }
+      this.$forceUpdate()
+      this.$set(this.tableData, i, this.tableData[i])
+      console.log(this.tableData)
     }
   }
 }

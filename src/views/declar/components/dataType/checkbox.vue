@@ -49,7 +49,7 @@ export default {
   data() {
     return {
       ruleForm: {
-        build: '',
+        build: [],
         buildChild: [],
         operate: [],
         service: []

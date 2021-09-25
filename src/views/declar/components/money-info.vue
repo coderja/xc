@@ -1,20 +1,28 @@
 <template>
   <div class="app-container">
-    <el-form ref="monneyInfoForm" :model="form" label-width="160px">
       <div class="table-list">
         <h3>项目估算资金（万元）</h3>
 
-        <s-d-table />
+        <s-d-table
+          ref='SDForm'
+          v-if="!proType.includes('软件开发')"
+        />
 
-        <h-p-table />
+        <s-p-table
+        ref='SPForm'
+          v-if="!proType.includes('软件采购')"
+        />
 
-        <service-table />
+        <h-p-table ref='HPForm' v-if="!proType.includes('硬件采购')" />
 
-        <s-o-table />
+        <service-table ref='SForm'  v-if="!proType.includes('服务')" />
 
-        <h-o-table />
+        <s-o-table ref='SOForm' v-if="!proType.includes('软件运维')" />
+
+        <h-o-table  ref='HOForm' v-if="!proType.includes('硬件运维')" />
       </div>
 
+    <el-form ref="moneyInfoForm" :model="form" :disabled='isDetail' label-width="160px">
       <form-label-title class="list">
         <span slot="title">
           资金来源（万元）
@@ -61,13 +69,23 @@ import hardOperateTable from './capitalTable/hardOperateTable.vue'
 import serviceTable from './capitalTable/serviceTable.vue'
 import softDevelopTable from './capitalTable/softDevelopTable.vue'
 import softOperateTable from './capitalTable/softOperateTable.vue'
+import softPurchasTable from './capitalTable/softPurchasTable.vue'
 export default {
   components: {
     'h-p-table': hardPurchasTable,
     'h-o-table': hardOperateTable,
     'service-table': serviceTable,
     's-d-table': softDevelopTable,
-    's-o-table': softOperateTable
+    's-o-table': softOperateTable,
+    's-p-table': softPurchasTable
+  },
+  props: {
+    proType: String
+  },
+  computed: {
+    isDetail() {
+      return this.$route.query.detail
+    }
   },
   data() {
     return {
@@ -80,7 +98,7 @@ export default {
       formRules: {
         cityPlan: [
           {
-            pattern: /^[A-Za-z0-9\u4e00-\u9fa5]$/,
+            pattern: /^[A-Za-z0-9\u4e00-\u9fa5]{0,32}$/,
             message: '请输入中英文数字',
             trigger: 'blur'
           },
@@ -92,7 +110,7 @@ export default {
         ],
         otherOriginal: [
           {
-            pattern: /^[A-Za-z0-9\u4e00-\u9fa5]$/,
+            pattern: /^[A-Za-z0-9\u4e00-\u9fa5]{0,32}$/,
             message: '请输入中英文数字',
             trigger: 'blur'
           },
@@ -105,7 +123,7 @@ export default {
         originalExplain: [
           {
             required: false,
-            pattern: /^[A-Za-z0-9\u4e00-\u9fa5]$/,
+            pattern: /^[A-Za-z0-9\u4e00-\u9fa5]{0,32}$/,
             message: '请输入中英文数字',
             trigger: 'blur'
           }

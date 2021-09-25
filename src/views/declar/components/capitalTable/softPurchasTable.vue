@@ -2,7 +2,7 @@
   <div class="table">
     <form-label-title class="list">
       <span slot="title">
-        软件开发投资估算明细（万元）
+        软件采购类项目投资估算明细（万元）
       </span>
     </form-label-title>
     <div class="t-operate-btn">
@@ -10,9 +10,9 @@
       <span class="text-info">{{ total }}</span>
       <el-button type="primary" size="small" v-if='!isDetail'>模板下载</el-button>
       <el-button type="primary" size="small" v-if='!isDetail'>数据导入</el-button>
-      <el-button type="danger" size="small" v-if='!isDetail' @click="deleteTable">删除</el-button>
+      <el-button type="danger" size="small" v-if='!isDetail' @click='deleteTable'>删除</el-button>
     </div>
-    <el-form ref="SDForm" :model="tableInfo" :disabled='isDetail' :rules="quotedInfRules">
+    <el-form ref="SPForm" :model="tableInfo" :disabled='isDetail' :rules="quotedInfRules">
       <el-table
         :data="tableInfo.tableDatas"
         style="width: 100%"
@@ -42,36 +42,6 @@
           </template>
         </el-table-column>
 
-        <el-table-column
-          label="子系统名称（如有）"
-          prop="subSysName"
-          width="160"
-        >
-          <template slot-scope="scope">
-            <el-form-item
-              :rules="quotedInfRules.name"
-              :prop="'tableDatas.' + scope.$index + '.subSysName'"
-            >
-              <el-input v-model="scope.row.subSysName" />
-            </el-form-item>
-          </template>
-        </el-table-column>
-
-        <!-- <el-table-column
-          label="上线时间（如有）"
-          prop="onlineDate"
-          width="100"
-        >
-          <template slot-scope="scope">
-            <el-form-item
-              :rules="quotedInfRules.name"
-              :prop="'tableDatas.' + scope.$index + '.onlineDate'"
-            >
-              <el-input v-model="scope.row.onlineDate" />
-            </el-form-item>
-          </template>
-        </el-table-column> -->
-
         <el-table-column label="功能模块名称" prop="funcName" width="120">
           <template slot-scope="scope">
             <el-form-item
@@ -94,13 +64,13 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="功能点描述（使用操作）" prop="funcPointDesc">
+        <el-table-column label="市场调研说明" prop="markRepExplain">
           <template slot-scope="scope">
             <el-form-item
               :rules="quotedInfRules.name"
-              :prop="'tableDatas.' + scope.$index + '.funcPointDesc'"
+              :prop="'tableDatas.' + scope.$index + '.markRepExplain'"
             >
-              <el-input v-model="scope.row.funcPointDesc" />
+              <el-input v-model="scope.row.markRepExplain" />
             </el-form-item>
           </template>
         </el-table-column>
@@ -133,12 +103,12 @@
               :rules="quotedInfRules.number"
               :prop="'tableDatas.' + scope.$index + '.total'"
             >
-              <el-input disabled v-model="scope.row.total" />
+              <el-input v-model="scope.row.total" />
             </el-form-item>
           </template>
         </el-table-column>
 
-        <el-table-column label="操作" v-if='!isDetail' width="100" fixed='right'>
+        <el-table-column v-if='!isDetail' label="操作" width="100" fixed='right'>
           <template slot-scope="scope">
             <el-button
               icon="el-icon-delete"
@@ -187,22 +157,20 @@ export default {
         tableDatas: [
           {
             sysName: '1', // 系统名称
-            subSysName: '1', // 子系统名称
             funcName: '22', // 功能模块名称
             funcDesc: '21', // 功能描述
-            funcPointDesc: '12', // 功能点描述
-            price: '1', // 单价
-            number: '2', // 数量
+            markRepExplain: '12', // 市场调研说明
+            price: '2', // 单价
+            number: '3', // 数量
             total: '' // 小计
           },
           {
             sysName: '1', // 系统名称
-            subSysName: '1', // 子系统名称
             funcName: '22', // 功能模块名称
             funcDesc: '21', // 功能描述
-            funcPointDesc: '12', // 功能点描述
-            price: '10', // 单价
-            number: '22', // 数量
+            markRepExplain: '12', // 市场调研说明
+            price: '2', // 单价
+            number: '', // 数量
             total: '' // 小计
           }
         ]
@@ -238,7 +206,7 @@ export default {
     'tableInfo.tableDatas':{
       handler() {
         this.tableInfo.tableDatas.map(el=>{
-          if(!isNaN(el.price)&&!isNaN(el.number)) {
+          if(el.price && el.number && !isNaN(el.price)&&!isNaN(el.number)) {
             return el.total = el.price * el.number
           }
         })
@@ -247,9 +215,7 @@ export default {
     } 
 
   },
-  mounted() {
-
-  },
+  mounted() {},
   methods: {
     deleteTable() {
       this.$confirm('确实要删除当前表格的数据？', '删除提示', {
@@ -283,10 +249,9 @@ export default {
         const values = data.map(item => {
           const fileds = [
             'sysName',
-            'childSysName',
             'funcName',
             'funcDesc',
-            'funcPointDesc',
+            'markRepExplain',
             'price',
             'number',
             'total'
